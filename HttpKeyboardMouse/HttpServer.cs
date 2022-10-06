@@ -60,7 +60,7 @@ namespace WinFormsApp1
                 HttpListenerContext context = _httpListener.EndGetContext(result);
                 HttpListenerRequest request = context.Request;
 
-                Debug.WriteLine($"{request.HttpMethod} {request.Url}");
+                Trace.WriteLine($"{request.HttpMethod} {request.Url}");
 
                 ParseRequest(request, context);
 

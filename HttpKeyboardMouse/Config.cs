@@ -21,12 +21,12 @@ namespace WinFormsApp1
             }
             catch (YamlException ex)
             {
-                Debug.WriteLine(ex);
+                Trace.WriteLine(ex);
                 return new Config();
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
-                Debug.WriteLine($"Config file {filepath} not found. Loading defaults.");
+                Trace.WriteLine($"Config file {filepath} not found. Loading defaults.");
                 return new Config();
             }
         }

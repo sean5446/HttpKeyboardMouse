@@ -32,18 +32,18 @@ namespace WinFormsApp1
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.HttpKeyboardMouse = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.LinkLabelComputerName = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // notifyIcon1
+            // HttpKeyboardMouse
             // 
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
+            this.HttpKeyboardMouse.Icon = ((System.Drawing.Icon)(resources.GetObject("HttpKeyboardMouse.Icon")));
+            this.HttpKeyboardMouse.Text = "Http Keyboard Mouse";
+            this.HttpKeyboardMouse.Visible = true;
+            this.HttpKeyboardMouse.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
             // label1
             // 
@@ -54,16 +54,16 @@ namespace WinFormsApp1
             this.label1.TabIndex = 0;
             this.label1.Text = "Computer name:";
             // 
-            // linkLabel1
+            // LinkLabelComputerName
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(115, 9);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(60, 15);
-            this.linkLabel1.TabIndex = 1;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "linkLabel1";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.LinkLabelComputerName.AutoSize = true;
+            this.LinkLabelComputerName.Location = new System.Drawing.Point(115, 9);
+            this.LinkLabelComputerName.Name = "LinkLabelComputerName";
+            this.LinkLabelComputerName.Size = new System.Drawing.Size(117, 15);
+            this.LinkLabelComputerName.TabIndex = 1;
+            this.LinkLabelComputerName.TabStop = true;
+            this.LinkLabelComputerName.Text = "http://localhost:8080";
+            this.LinkLabelComputerName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // textBox1
             // 
@@ -84,13 +84,13 @@ namespace WinFormsApp1
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 411);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.LinkLabelComputerName);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "Keyboard Mouse";
+            this.Text = "Http Keyboard Mouse";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.ResumeLayout(false);
@@ -100,9 +100,9 @@ namespace WinFormsApp1
 
         #endregion
 
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.NotifyIcon HttpKeyboardMouse;
         private Label label1;
-        private LinkLabel linkLabel1;
+        private LinkLabel LinkLabelComputerName;
         private TextBox textBox1;
     }
 }

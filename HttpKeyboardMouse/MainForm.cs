@@ -12,7 +12,7 @@ namespace WinFormsApp1
 
             // Visual Studio ToolBox is not working... can't make a Menu
             // and InitializeComponent is auto-generated when controls are changed in the designer
-            this.notifyIcon1.ContextMenuStrip = new ContextMenuStrip()
+            this.HttpKeyboardMouse.ContextMenuStrip = new ContextMenuStrip()
             {
                 Items =
                     {
@@ -25,15 +25,17 @@ namespace WinFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             Trace.Listeners.Add(new TextWriterTraceListener("http.log"));
-            Trace.Listeners.Add(new MyTraceListener(textBox1));
+            Trace.Listeners.Add(new TextBoxTraceListener(textBox1));
             Trace.AutoFlush = true;
 
             string defaultConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "config.yaml");
             Config config = LoadFile(defaultConfigPath);
-            Debug.WriteLine("Starting on port: " + config.Server.Port);
+
+            // Trace statements make it to release build, whereas debug to not
+            Trace.WriteLine("Starting on port: " + config.Server.Port);
 
             string? hostname = Environment.GetEnvironmentVariable("COMPUTERNAME");
-            linkLabel1.Text = $"http://{hostname?.ToLower()}.local:{config.Server.Port}/";
+            LinkLabelComputerName.Text = $"http://{hostname?.ToLower()}.local:{config.Server.Port}/";
 
             HttpServer httpServer = new();
             httpServer.Start(config.Server?.Port);
@@ -42,7 +44,7 @@ namespace WinFormsApp1
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo { FileName = linkLabel1.Text, UseShellExecute = true });
+            Process.Start(new ProcessStartInfo { FileName = LinkLabelComputerName.Text, UseShellExecute = true });
         }
 
         private static void Open(object? sender, EventArgs e)
