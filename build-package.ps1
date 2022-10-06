@@ -16,7 +16,9 @@ dotnet build --configuration Release
 Copy-Item -Path "config.yaml" -Destination $destination -Force
 Copy-Item -Path "www" -Destination $destination -Recurse -Force
 
-# Compress-Archive -Path $destination -DestinationPath $packageName
+# for asset (Publish Release in workflow)
+Compress-Archive -Path $destination -DestinationPath $packageName
 
-New-Item $packageFolder -ItemType directory
-Copy-Item -Path $destination/* -Destination $packageFolder -Recurse -Force
+# for artifact (Upload Artifact in workflow)
+# New-Item $packageFolder -ItemType directory
+# Copy-Item -Path $destination/* -Destination $packageFolder -Recurse -Force
