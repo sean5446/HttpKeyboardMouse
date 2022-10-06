@@ -44,5 +44,4 @@ jobs:
           prerelease: false
           title: "Latest Build"
           files: |
-            LICENSE.txt
             *.zip
