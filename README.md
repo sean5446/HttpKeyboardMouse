@@ -1,7 +1,7 @@
 # HTTP Keyboard and Trackpad
 
 ## General
-Allows a smartphone to control the mouse and keyboard of a Windows desktop
+Allows a smartphone to control the mouse and keyboard of a Windows desktop through the browser. No app insteall required!
 
 Useful for pausing, playing, and searching for videos from the couch
 
