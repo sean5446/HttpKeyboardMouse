@@ -27,7 +27,7 @@ jobs:
         run: dotnet restore
 
       - name: Build code and Make Package
-        run: ./package.ps1
+        run: ./build-package.ps1
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
