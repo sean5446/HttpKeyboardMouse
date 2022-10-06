@@ -1,6 +1,7 @@
 ﻿
 $destination = "HttpKeyboardMouse\bin\Release\net6.0-windows"
 $packageName = "package.zip"
+$packageFolder = "package"
 
 # don't dot net clean, remove the whole directory in case things have been renamed
 if (Test-Path $destination ) {
@@ -15,4 +16,7 @@ dotnet build --configuration Release
 Copy-Item -Path "config.yaml" -Destination $destination -Force
 Copy-Item -Path "www" -Destination $destination -Recurse -Force
 
-Compress-Archive -Path $destination -DestinationPath $packageName
+# Compress-Archive -Path $destination -DestinationPath $packageName
+
+New-Item $packageFolder -ItemType directory
+Copy-Item -Path $destination/* -Destination $packageFolder -Recurse -Force
