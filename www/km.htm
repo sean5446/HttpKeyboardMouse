@@ -1,0 +1,205 @@
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <title>Keyboard Mouse</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script>
+window.addEventListener("DOMContentLoaded", () => {
+
+var $ = document.querySelector.bind(document);
+var touchArea = $('#touch-area');
+var textArea = $('#text-area');
+
+var touchStarted = false;
+var throttleTimer = false;
+var debounceTimer = false;
+var currX = 0;
+var currY = 0;
+var lastX = null;
+var lastY = null;
+
+const throttle = (callback, time, ...args) => {
+  if (throttleTimer) return;
+  throttleTimer = true;
+  setTimeout(() => {
+    callback(...args);
+    throttleTimer = false;
+  }, time);
+};
+
+const debounce = (callback, time) => {
+  window.clearTimeout(debounceTimer);
+  debounceTimer = window.setTimeout(callback, time);
+};
+
+const postData = (path, data) => {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+      // Request finished. Do processing here.
+    }
+  }
+  xhr.open("POST", path, true);
+  xhr.send(data);
+};
+
+const getPointerEvent = (event) => {
+  return event.targetTouches ? event.targetTouches[0] : event;
+};
+
+const setListener = (elm, events, callback) => {
+  let eventsArray = events.split(' ');
+  let i = eventsArray.length;
+  while (i--) {
+    elm.addEventListener(eventsArray[i], callback, false);
+  }
+};
+
+setListener(touchArea, 'touchstart mousedown', (e) => {
+  e.preventDefault();
+  let pointer = getPointerEvent(e);
+  currX = pointer.pageX;
+  currY = pointer.pageY;
+  touchStarted = true;
+  touchArea.innerHTML = 'Touch started';
+
+  // detecting if after 200ms the finger is still in the same position
+  setTimeout(() => {
+    if (!touchStarted) {
+      touchArea.innerHTML = 'Tap';
+      postData("/tap", "tap");
+    }
+  }, 200);
+});
+
+setListener(touchArea, 'touchend mouseup touchcancel', (e) => {
+  e.preventDefault();
+  touchStarted = false;
+  lastX = null;
+  lastY = null;
+  touchArea.innerHTML = 'Touch end';
+});
+
+setListener(touchArea, 'touchmove mousemove', (e) => {
+  e.preventDefault();
+  let pointer = getPointerEvent(e);
+  currX = parseInt(pointer.pageX);
+  currY = parseInt(pointer.pageY);
+  if (lastX == null) lastX = currX;
+  if (lastY == null) lastY = currY;
+  if (touchStarted) {
+    touchArea.innerHTML = `Swiping ${currX - lastX} ${currY - lastY}`;
+    throttle(postData, 10, "/swipe", `${currX - lastX} ${currY - lastY}`);
+  }
+  lastX = currX;
+  lastY = currY;
+});
+
+textArea.onkeydown = (e) => {
+  let key = e.keyCode || e.charCode;
+  if (key === 8 && textArea.value.length === 0) {
+    console.log("backspace");
+    postData("/keys", "backspace");
+  }
+  else if (e.key === "Enter") {
+    console.log(String.fromCharCode(e.which));
+    postData("/keys", textArea.value);
+    textArea.value = "";
+  }
+};
+
+setListener($('.click'), 'click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  postData("/tap", e.target.id);
+});
+
+setListener($('.media'), 'click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  postData("/media", e.target.id);
+});
+
+}, false); // end dom load
+
+</script>
+<style>
+
+body, html {
+  color: #fff;
+  background-color: #333;
+  font-size: 25px;
+}
+
+#touch-area {
+  width: 100%;
+  height: 70%;
+}
+
+#button-area {
+  width: 100%;
+  height: 10%;
+}
+
+#button-area > div {
+  border: 1px;
+  border-color: #fff;
+  border-style: solid;
+  width: 32%;
+}
+
+#text-area {
+  width: 100%;
+  color: inherit;
+  font-size: inherit; 
+  background-color: inherit;
+  border-color: #fff;
+  padding: 3px 6px;
+}
+
+#media-area {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  text-align: center;
+  width: 100%;
+  height: 10%;
+}
+
+#media-area > * {
+  line-height: 10%;
+}
+
+.flex-spread-horz {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  flex: 1;
+}
+</style>
+</head>
+
+<body>
+  <div id="touch-area"></div>
+
+  <div id="button-area" class="flex-spread-horz click">
+    <div id="left">&nbsp;</div>
+    <div id="middle">&nbsp;</div>
+    <div id="right">&nbsp;</div>
+  </div>
+  
+  <div id="media-area" class="flex-spread-horz media">
+    <div id="play">⏯</div>
+    <i id="stop" class="material-icons">stop</i>
+    <i id="back" class="material-icons">skip_previous</i>
+    <i id="next" class="material-icons">skip_next</i>
+    <i id="up" class="material-icons">volume_up</i>
+    <i id="down" class="material-icons">volume_down</i>
+    <i id="mute" class="material-icons">volume_off</i>
+  </div>
+  
+  <input id="text-area" placeholder="type here..." aria-label="send text">
+</body>
+</html>
