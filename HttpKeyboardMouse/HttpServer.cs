@@ -120,74 +120,113 @@ namespace WinFormsApp1
 
             response.ContentType = "text/plain; charset=utf-8";
 
-            if (request.RawUrl.Equals("/tap"))
+            if (request.RawUrl.Equals("/mouse"))
             {
-                if (bodyContent.Equals("right"))
+                HandleMouse(bodyContent);
+            }
+            else if (request.RawUrl.Equals("/keys"))
+            {
+                HandleKeys(bodyContent);
+            }
+            else if (request.RawUrl.Equals("/media"))
+            {
+                HandleMedia(bodyContent);
+            }
+        }
+
+        private static void HandleMouse(string bodyContent)
+        {
+            try
+            {
+                string data0 = bodyContent.Split(' ')[0];
+                string data1 = bodyContent.Split(' ')[1];
+
+                if (data0.Equals("right") && data1.Equals("up"))
                 {
                     WinAPI.GetCursorPos(out WinAPI.POINT p);
                     WinAPI.RightMouseClick(p.X, p.Y);
                 }
-                else if (bodyContent.Equals("middle"))
+                else if (data0.Equals("middle") && data1.Equals("up"))
                 {
                     WinAPI.GetCursorPos(out WinAPI.POINT p);
                     WinAPI.MiddleMouseClick(p.X, p.Y);
                 }
+                else if (data0.Equals("left"))
+                {
+                    if (data1.Equals("up")) {
+                        WinAPI.GetCursorPos(out WinAPI.POINT p);
+                        WinAPI.LeftUp(p.X, p.Y);
+                    }
+                    else if (data1.Equals("down"))
+                    {
+                        WinAPI.GetCursorPos(out WinAPI.POINT p);
+                        WinAPI.LeftDown(p.X, p.Y);
+                    }
+                    else
+                    {
+                        WinAPI.GetCursorPos(out WinAPI.POINT p);
+                        WinAPI.LeftMouseClick(p.X, p.Y);
+                    }
+                }
                 else
                 {
+                    int x = (int)Convert.ToDouble(data0);
+                    int y = (int)Convert.ToDouble(data1);
                     WinAPI.GetCursorPos(out WinAPI.POINT p);
-                    WinAPI.LeftMouseClick(p.X, p.Y);
+                    WinAPI.SetCursorPos(p.X + x, p.Y + y);
+                    //Mouse.MoveTo(x, y);
                 }
             }
-            else if (request.RawUrl.Equals("/swipe"))
+            catch (Exception)
             {
-                int x = (int)Convert.ToDouble(bodyContent.Split(' ')[0]);
-                int y = (int)Convert.ToDouble(bodyContent.Split(' ')[1]);
-                WinAPI.GetCursorPos(out WinAPI.POINT p);
-                WinAPI.SetCursorPos(p.X + x, p.Y + y);
-                //Mouse.MoveTo(x, y);
-            }
-            else if (request.RawUrl.Equals("/keys"))
-            {
-                if (bodyContent.Equals("backspace"))
-                {
-                    SendKeys.SendWait("{BACKSPACE}");
-                }
-                else
-                {
-                    SendKeys.SendWait(bodyContent);
-                }
-            }
-            else if (request.RawUrl.Equals("/media"))
-            {
-                if (bodyContent.Equals("up"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_VOLUME_UP);
-                }
-                else if (bodyContent.Equals("down"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_VOLUME_DOWN);
-                }
-                else if (bodyContent.Equals("mute"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_VOLUME_MUTE);
-                }
-                else if (bodyContent.Equals("play"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_MEDIA_PLAY_PAUSE);
-                }
-                else if (bodyContent.Equals("next"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_MEDIA_NEXT_TRACK);
-                }
-                else if (bodyContent.Equals("back"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_MEDIA_PREV_TRACK);
-                }
-                else if (bodyContent.Equals("stop"))
-                {
-                    WinAPI.SendKey(WinAPI.VK_MEDIA_STOP);
-                }
+                Trace.WriteLine($"Bad content: {bodyContent}");
             }
         }
+
+        private static void HandleKeys(string bodyContent)
+        {
+            if (bodyContent.Equals("backspace"))
+            {
+                SendKeys.SendWait("{BACKSPACE}");
+            }
+            else
+            {
+                SendKeys.SendWait(bodyContent);
+            }
+        }
+
+        private static void HandleMedia(string bodyContent)
+        {
+            if (bodyContent.Equals("up"))
+            {
+                WinAPI.SendKey(WinAPI.VK_VOLUME_UP);
+            }
+            else if (bodyContent.Equals("down"))
+            {
+                WinAPI.SendKey(WinAPI.VK_VOLUME_DOWN);
+            }
+            else if (bodyContent.Equals("mute"))
+            {
+                WinAPI.SendKey(WinAPI.VK_VOLUME_MUTE);
+            }
+            else if (bodyContent.Equals("play"))
+            {
+                WinAPI.SendKey(WinAPI.VK_MEDIA_PLAY_PAUSE);
+            }
+            else if (bodyContent.Equals("next"))
+            {
+                WinAPI.SendKey(WinAPI.VK_MEDIA_NEXT_TRACK);
+            }
+            else if (bodyContent.Equals("back"))
+            {
+                WinAPI.SendKey(WinAPI.VK_MEDIA_PREV_TRACK);
+            }
+            else if (bodyContent.Equals("stop"))
+            {
+                WinAPI.SendKey(WinAPI.VK_MEDIA_STOP);
+            }
+        }
+ 
+
     }
 }

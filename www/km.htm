@@ -8,8 +8,8 @@
 window.addEventListener("DOMContentLoaded", () => {
 
 var $ = document.querySelector.bind(document);
-var touchArea = $('#touch-area');
-var textArea = $('#text-area');
+var touchArea = $("#touch-area");
+var textArea = $("#text-area");
 
 var touchStarted = false;
 var throttleTimer = false;
@@ -49,39 +49,39 @@ const getPointerEvent = (event) => {
 };
 
 const setListener = (elm, events, callback) => {
-  let eventsArray = events.split(' ');
+  let eventsArray = events.split(" ");
   let i = eventsArray.length;
   while (i--) {
     elm.addEventListener(eventsArray[i], callback, false);
   }
 };
 
-setListener(touchArea, 'touchstart mousedown', (e) => {
+setListener(touchArea, "touchstart mousedown", (e) => {
   e.preventDefault();
   let pointer = getPointerEvent(e);
   currX = pointer.pageX;
   currY = pointer.pageY;
   touchStarted = true;
-  touchArea.innerHTML = 'Touch started';
+  touchArea.innerHTML = "Touch started";
 
   // detecting if after 200ms the finger is still in the same position
   setTimeout(() => {
     if (!touchStarted) {
-      touchArea.innerHTML = 'Tap';
-      postData("/tap", "tap");
+      touchArea.innerHTML = "Left click";
+      postData("/mouse", "left click");
     }
   }, 200);
 });
 
-setListener(touchArea, 'touchend mouseup touchcancel', (e) => {
+setListener(touchArea, "touchend mouseup touchcancel", (e) => {
   e.preventDefault();
   touchStarted = false;
   lastX = null;
   lastY = null;
-  touchArea.innerHTML = 'Touch end';
+  touchArea.innerHTML = "Touch end";
 });
 
-setListener(touchArea, 'touchmove mousemove', (e) => {
+setListener(touchArea, "touchmove mousemove", (e) => {
   e.preventDefault();
   let pointer = getPointerEvent(e);
   currX = parseInt(pointer.pageX);
@@ -90,7 +90,7 @@ setListener(touchArea, 'touchmove mousemove', (e) => {
   if (lastY == null) lastY = currY;
   if (touchStarted) {
     touchArea.innerHTML = `Swiping ${currX - lastX} ${currY - lastY}`;
-    throttle(postData, 10, "/swipe", `${currX - lastX} ${currY - lastY}`);
+    throttle(postData, 10, "/mouse", `${currX - lastX} ${currY - lastY}`);
   }
   lastX = currX;
   lastY = currY;
@@ -109,15 +109,24 @@ textArea.onkeydown = (e) => {
   }
 };
 
-setListener($('.click'), 'click', (e) => {
+setListener($(".mouse"), "touchstart mousedown", (e) => {
   e.preventDefault();
   e.stopPropagation();
-  postData("/tap", e.target.id);
+  if (e.target.id == 'button-area') return;
+  postData("/mouse", `${e.target.id} down`);
 });
 
-setListener($('.media'), 'click', (e) => {
+setListener($(".mouse"), "touchend mouseup", (e) => {
   e.preventDefault();
   e.stopPropagation();
+  if (e.target.id == 'button-area') return;
+  postData("/mouse", `${e.target.id} up`);
+});
+
+setListener($(".media"), "click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.target.id == 'media-area') return;
   postData("/media", e.target.id);
 });
 
@@ -184,7 +193,7 @@ body, html {
 <body>
   <div id="touch-area"></div>
 
-  <div id="button-area" class="flex-spread-horz click">
+  <div id="button-area" class="flex-spread-horz mouse">
     <div id="left">&nbsp;</div>
     <div id="middle">&nbsp;</div>
     <div id="right">&nbsp;</div>

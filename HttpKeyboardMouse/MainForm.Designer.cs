@@ -36,6 +36,7 @@ namespace WinFormsApp1
             this.label1 = new System.Windows.Forms.Label();
             this.LinkLabelComputerName = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.BtnClearLog = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // HttpKeyboardMouse
@@ -78,11 +79,22 @@ namespace WinFormsApp1
             this.textBox1.TabIndex = 2;
             this.textBox1.WordWrap = false;
             // 
+            // BtnClearLog
+            // 
+            this.BtnClearLog.Location = new System.Drawing.Point(621, 5);
+            this.BtnClearLog.Name = "BtnClearLog";
+            this.BtnClearLog.Size = new System.Drawing.Size(75, 23);
+            this.BtnClearLog.TabIndex = 3;
+            this.BtnClearLog.Text = "Clear log";
+            this.BtnClearLog.UseVisualStyleBackColor = true;
+            this.BtnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 411);
+            this.Controls.Add(this.BtnClearLog);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.LinkLabelComputerName);
             this.Controls.Add(this.label1);
@@ -104,5 +116,6 @@ namespace WinFormsApp1
         private Label label1;
         private LinkLabel LinkLabelComputerName;
         private TextBox textBox1;
+        private Button BtnClearLog;
     }
 }

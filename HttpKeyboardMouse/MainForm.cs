@@ -73,5 +73,10 @@ namespace WinFormsApp1
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
+
+        private void BtnClearLog_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+        }
     }
 }
