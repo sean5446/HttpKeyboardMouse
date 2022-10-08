@@ -136,6 +136,14 @@ setListener($(".media"), "click", (e) => {
   touchArea.innerHTML = e.target.id;
 });
 
+setListener($(".screens"), "click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.target.id == 'screens-area') return;
+  postData("/screens", e.target.id);
+  touchArea.innerHTML = `screen ${e.target.id}`;
+});
+
 }, false); // end dom load
 
 </script>
@@ -193,6 +201,24 @@ body, html {
   flex-wrap: wrap;
   flex: 1;
 }
+
+#screens-area {
+  float: right;
+  width: 50%;
+  height: 4%
+}
+
+#screens-area > div {
+  background-color: #3f3f3f;
+  border: 1px solid #a1a1a1;
+  height: 100%;
+  width: 50px;
+  text-align: center;
+  font-size: 25px;
+  margin-top: 1%;
+}
+
+
 </style>
 </head>
 
@@ -216,5 +242,11 @@ body, html {
   </div>
   
   <input id="text-area" placeholder="type here..." aria-label="send text">
+
+  <div id="screens-area" class="flex-spread-horz screens">
+    <div id="1">1</div>
+    <div id="2">2</div>
+    <div id="3">3</div>
+  </div>
 </body>
 </html>

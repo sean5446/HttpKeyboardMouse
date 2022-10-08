@@ -59,21 +59,21 @@ namespace WinFormsApp1
 
 
 
-        public static void LeftMouseClick(int xpos, int ypos)
+        public static void MouseLeftClick(int xpos, int ypos)
         {
             SetCursorPos(xpos, ypos);
             mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
         }
 
-        public static void RightMouseClick(int xpos, int ypos)
+        public static void MouseRightClick(int xpos, int ypos)
         {
             SetCursorPos(xpos, ypos);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, xpos, ypos, 0, 0);
             mouse_event(MOUSEEVENTF_RIGHTUP, xpos, ypos, 0, 0);
         }
 
-        public static void MiddleMouseClick(int xpos, int ypos)
+        public static void MouseMiddleClick(int xpos, int ypos)
         {
             SetCursorPos(xpos, ypos);
             mouse_event(MOUSEEVENTF_MIDDLEDOWN, xpos, ypos, 0, 0);
@@ -91,31 +91,31 @@ namespace WinFormsApp1
             Application.DoEvents();
         }
 
-        public static void LeftDown(int globalX, int globalY)
+        public static void MouseLeftDown(int globalX, int globalY)
         {
             DoEvent(MOUSEEVENTF_MOVE, globalX, globalY);
             DoEvent(MOUSEEVENTF_LEFTDOWN, globalX, globalY);
         }
 
-        public static void LeftUp(int globalX, int globalY)
+        public static void MouseLeftUp(int globalX, int globalY)
         {
             DoEvent(MOUSEEVENTF_MOVE, globalX, globalY);
             DoEvent(MOUSEEVENTF_LEFTUP, globalX, globalY);
         }
 
-        public static void RightDown(int globalX, int globalY)
+        public static void MouseRightDown(int globalX, int globalY)
         {
             DoEvent(MOUSEEVENTF_MOVE, globalX, globalY);
             DoEvent(MOUSEEVENTF_RIGHTDOWN, globalX, globalY);
         }
 
-        public static void RightUp(int globalX, int globalY)
+        public static void MouseRightUp(int globalX, int globalY)
         {
             DoEvent(MOUSEEVENTF_MOVE, globalX, globalY);
             DoEvent(MOUSEEVENTF_RIGHTUP, globalX, globalY);
         }
 
-        public static void MoveTo(int globalX, int globalY, int speed)
+        public static void MoveCursorTo(int globalX, int globalY, int speed)
         {
             if (speed != 0)
             {
@@ -141,24 +141,39 @@ namespace WinFormsApp1
             Application.DoEvents();
         }
 
-        public static void MoveTo(int globalX, int globalY)
+        public static void MoveCursorTo(int globalX, int globalY)
         {
-            MoveTo(globalX, globalY, 0);
+            MoveCursorTo(globalX, globalY, 0);
         }
 
-        public static void DragAndDrop(int startX, int startY, int finishX, int finishY)
+        public static void MouseDragAndDrop(int startX, int startY, int finishX, int finishY)
         {
-            LeftDown(startX, startY);
-            MoveTo(finishX, finishY, 10);
-            LeftUp(finishX, finishY);
+            MouseLeftDown(startX, startY);
+            MoveCursorTo(finishX, finishY, 10);
+            MouseLeftUp(finishX, finishY);
         }
-
 
         public static void SendKey(int key)
         {
-            keybd_event((byte)key, 0, WinAPI.KEYEVENTF_EXTENTEDKEY, IntPtr.Zero);
+            keybd_event((byte)key, 0, KEYEVENTF_EXTENTEDKEY, IntPtr.Zero);
         }
 
+        public static int GetNumberOfScreens()
+        {
+            return Screen.AllScreens.Length;
+        }
+
+        public static void SetCursorInMiddleOfScreen(int screenNumber)
+        {
+            if (screenNumber < 0 || screenNumber > Screen.AllScreens.Length - 1) 
+                return; 
+
+            var screens = Screen.AllScreens;
+            int x = screens[screenNumber].WorkingArea.Width / 2 + screens[screenNumber].WorkingArea.X;
+            int y = screens[screenNumber].WorkingArea.Height / 2 + screens[screenNumber].WorkingArea.Y;
+
+            SetCursorPos(x, y);
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 using HttpKeyboardMouse;
 using System.Diagnostics;
+using System.Windows.Forms;
 using static WinFormsApp1.ConfigReader;
 
 namespace WinFormsApp1

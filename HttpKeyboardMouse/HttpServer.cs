@@ -120,10 +120,8 @@ namespace WinFormsApp1
                 case "/mouse":
                     HandleMouse(bodyContent);
                     // don't spam swipe messages
-                    if (bodyContent.StartsWith("left") || bodyContent.StartsWith("right") || bodyContent.StartsWith("middle")) 
-                    {
+                    if (bodyContent.StartsWith("left") || bodyContent.StartsWith("right") || bodyContent.StartsWith("middle"))
                         Trace.WriteLine($"{request.RemoteEndPoint} used mouse: {bodyContent}");
-                    }
                     break;
                 case "/keys":
                     HandleKeys(bodyContent);
@@ -132,6 +130,10 @@ namespace WinFormsApp1
                 case "/media":
                     HandleMedia(bodyContent);
                     Trace.WriteLine($"{request.RemoteEndPoint} used media operation: {bodyContent}");
+                    break;
+                case "/screens":
+                    HandleScreens(bodyContent);
+                    Trace.WriteLine($"{request.RemoteEndPoint} moved to screen: {bodyContent}");
                     break;
                 default:
                     Trace.WriteLine($"Unknown endpoint: {bodyContent}");
@@ -151,7 +153,7 @@ namespace WinFormsApp1
                     if (data1.Equals("up"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
-                        WinAPI.RightMouseClick(p.X, p.Y);
+                        WinAPI.MouseRightClick(p.X, p.Y);
                     }
                 }
                 else if (data0.Equals("middle"))
@@ -159,24 +161,24 @@ namespace WinFormsApp1
                     if (data1.Equals("up"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
-                        WinAPI.MiddleMouseClick(p.X, p.Y);
+                        WinAPI.MouseMiddleClick(p.X, p.Y);
                     }
                 }
                 else if (data0.Equals("left"))
                 {
                     if (data1.Equals("up")) {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
-                        WinAPI.LeftUp(p.X, p.Y);
+                        WinAPI.MouseLeftUp(p.X, p.Y);
                     }
                     else if (data1.Equals("down"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
-                        WinAPI.LeftDown(p.X, p.Y);
+                        WinAPI.MouseLeftDown(p.X, p.Y);
                     }
                     else
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
-                        WinAPI.LeftMouseClick(p.X, p.Y);
+                        WinAPI.MouseLeftClick(p.X, p.Y);
                     }
                 }
                 else
@@ -185,7 +187,6 @@ namespace WinFormsApp1
                     int y = (int)Convert.ToDouble(data1);
                     WinAPI.GetCursorPos(out WinAPI.POINT p);
                     WinAPI.SetCursorPos(p.X + x, p.Y + y);
-                    //Mouse.MoveTo(x, y);
                 }
             }
             catch (Exception)
@@ -228,6 +229,12 @@ namespace WinFormsApp1
                     Trace.WriteLine($"Unknown media content: {bodyContent}");
                     break;
             }
+        }
+
+        private static void HandleScreens(string bodyContent)
+        {
+            int n = (int)Convert.ToDouble(bodyContent) - 1;
+            WinAPI.SetCursorInMiddleOfScreen(n);
         }
 
     }
