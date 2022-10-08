@@ -24,4 +24,4 @@ Compress-Archive -Path $binaryPath/* -DestinationPath $packageName
 
 # for artifact (Upload Artifact in workflow)
 # New-Item $packageFolder -ItemType directory
-# Copy-Item -Path $binaryPath/* -Destination $packageFolder -Recurse -Force
+# Copy-Item -Recurse -Force -Path $binaryPath/* -Destination $packageFolder

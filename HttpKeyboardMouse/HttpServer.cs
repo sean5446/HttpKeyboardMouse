@@ -67,8 +67,6 @@ namespace WinFormsApp1
             }
         }
 
-
-
         private void ParseRequest(HttpListenerRequest request, HttpListenerContext context)
         {
             HttpListenerResponse response = context.Response;
@@ -121,6 +119,7 @@ namespace WinFormsApp1
             {
                 case "/mouse":
                     HandleMouse(bodyContent);
+                    // don't spam swipe messages
                     if (bodyContent.StartsWith("left") || bodyContent.StartsWith("right") || bodyContent.StartsWith("middle")) 
                     {
                         Trace.WriteLine($"{request.RemoteEndPoint} used mouse: {bodyContent}");
