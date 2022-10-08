@@ -62,13 +62,13 @@ setListener(touchArea, "touchstart mousedown", (e) => {
   currX = pointer.pageX;
   currY = pointer.pageY;
   touchStarted = true;
-  touchArea.innerHTML = "Touch started";
+  touchArea.innerHTML = "touch started";
 
   // detecting if after 200ms the finger is still in the same position
   setTimeout(() => {
     if (!touchStarted) {
-      touchArea.innerHTML = "Left click";
       postData("/mouse", "left click");
+      touchArea.innerHTML = "left click";
     }
   }, 200);
 });
@@ -78,7 +78,7 @@ setListener(touchArea, "touchend mouseup touchcancel", (e) => {
   touchStarted = false;
   lastX = null;
   lastY = null;
-  touchArea.innerHTML = "Touch end";
+  touchArea.innerHTML = "touch end";
 });
 
 setListener(touchArea, "touchmove mousemove", (e) => {
@@ -89,7 +89,7 @@ setListener(touchArea, "touchmove mousemove", (e) => {
   if (lastX == null) lastX = currX;
   if (lastY == null) lastY = currY;
   if (touchStarted) {
-    touchArea.innerHTML = `Swiping ${currX - lastX} ${currY - lastY}`;
+    touchArea.innerHTML = `swiping ${currX - lastX} ${currY - lastY}`;
     throttle(postData, 10, "/mouse", `${currX - lastX} ${currY - lastY}`);
   }
   lastX = currX;
@@ -99,14 +99,16 @@ setListener(touchArea, "touchmove mousemove", (e) => {
 textArea.onkeydown = (e) => {
   let key = e.keyCode || e.charCode;
   if (key === 8 && textArea.value.length === 0) {
-    console.log("backspace");
-    postData("/keys", "backspace");
+    postData("/keys", "{BACKSPACE}");
   }
   else if (e.key === "Enter") {
-    console.log(String.fromCharCode(e.which));
-    postData("/keys", textArea.value);
-    textArea.value = "";
+    if (textArea.value.length === 0) {
+      postData("/keys", "{ENTER}");
+    } else {
+      postData("/keys", textArea.value);
+    }
   }
+  textArea.value = "";
 };
 
 setListener($(".mouse"), "touchstart mousedown", (e) => {
@@ -114,6 +116,7 @@ setListener($(".mouse"), "touchstart mousedown", (e) => {
   e.stopPropagation();
   if (e.target.id == 'button-area') return;
   postData("/mouse", `${e.target.id} down`);
+  touchArea.innerHTML = `${e.target.id} down`;
 });
 
 setListener($(".mouse"), "touchend mouseup", (e) => {
@@ -121,6 +124,7 @@ setListener($(".mouse"), "touchend mouseup", (e) => {
   e.stopPropagation();
   if (e.target.id == 'button-area') return;
   postData("/mouse", `${e.target.id} up`);
+  touchArea.innerHTML = `${e.target.id} up`;
 });
 
 setListener($(".media"), "click", (e) => {
@@ -128,6 +132,7 @@ setListener($(".media"), "click", (e) => {
   e.stopPropagation();
   if (e.target.id == 'media-area') return;
   postData("/media", e.target.id);
+  touchArea.innerHTML = e.target.id;
 });
 
 }, false); // end dom load

@@ -16,6 +16,7 @@ namespace WinFormsApp1
         {
             if (port != null) _port = port.Value;
 
+            // for debug, use relative to project. for normal use, assume www is in the current dir
             string currentDir = Environment.CurrentDirectory;
             if (currentDir.ToLower().Contains("debug"))
             {
@@ -60,17 +61,23 @@ namespace WinFormsApp1
                 HttpListenerContext context = _httpListener.EndGetContext(result);
                 HttpListenerRequest request = context.Request;
 
-                Trace.WriteLine($"{request.HttpMethod} {request.Url}");
-
                 ParseRequest(request, context);
 
                 Receive();
             }
         }
 
+
+
         private void ParseRequest(HttpListenerRequest request, HttpListenerContext context)
         {
             HttpListenerResponse response = context.Response;
+
+            // GET request
+            if (request.HttpMethod == HttpMethod.Get.ToString())
+            {
+                HandleGet(request, response);
+            }
 
             if (request.HasEntityBody)
             {
@@ -81,19 +88,11 @@ namespace WinFormsApp1
                 bodyReader.Close();
                 body.Close();
 
-                Debug.WriteLine($"Data: {bodyContent}\n");
-
-                // POST request - only answer content that's allowed
+                // POST request
                 if (request.HttpMethod == HttpMethod.Post.ToString())
                 {
                     HandlePost(request, response, bodyContent);
                 }
-            }
-
-            // GET request - serve the 1 page we allow
-            if (request.HttpMethod == HttpMethod.Get.ToString())
-            {
-                HandleGet(request, response);
             }
 
             response.StatusCode = (int)HttpStatusCode.OK;
@@ -116,21 +115,28 @@ namespace WinFormsApp1
 
         private static void HandlePost(HttpListenerRequest request, HttpListenerResponse response, string bodyContent)
         {
-            if (request.RawUrl == null) return;
-
             response.ContentType = "text/plain; charset=utf-8";
 
-            if (request.RawUrl.Equals("/mouse"))
+            switch (request.RawUrl)
             {
-                HandleMouse(bodyContent);
-            }
-            else if (request.RawUrl.Equals("/keys"))
-            {
-                HandleKeys(bodyContent);
-            }
-            else if (request.RawUrl.Equals("/media"))
-            {
-                HandleMedia(bodyContent);
+                case "/mouse":
+                    HandleMouse(bodyContent);
+                    if (bodyContent.StartsWith("left") || bodyContent.StartsWith("right") || bodyContent.StartsWith("middle")) 
+                    {
+                        Trace.WriteLine($"{request.RemoteEndPoint} used mouse: {bodyContent}");
+                    }
+                    break;
+                case "/keys":
+                    HandleKeys(bodyContent);
+                    Trace.WriteLine($"{request.RemoteEndPoint} typed message: {bodyContent}");
+                    break;
+                case "/media":
+                    HandleMedia(bodyContent);
+                    Trace.WriteLine($"{request.RemoteEndPoint} used media operation: {bodyContent}");
+                    break;
+                default:
+                    Trace.WriteLine($"Unknown endpoint: {bodyContent}");
+                    break;
             }
         }
 
@@ -141,15 +147,21 @@ namespace WinFormsApp1
                 string data0 = bodyContent.Split(' ')[0];
                 string data1 = bodyContent.Split(' ')[1];
 
-                if (data0.Equals("right") && data1.Equals("up"))
+                if (data0.Equals("right"))
                 {
-                    WinAPI.GetCursorPos(out WinAPI.POINT p);
-                    WinAPI.RightMouseClick(p.X, p.Y);
+                    if (data1.Equals("up"))
+                    {
+                        WinAPI.GetCursorPos(out WinAPI.POINT p);
+                        WinAPI.RightMouseClick(p.X, p.Y);
+                    }
                 }
-                else if (data0.Equals("middle") && data1.Equals("up"))
+                else if (data0.Equals("middle"))
                 {
-                    WinAPI.GetCursorPos(out WinAPI.POINT p);
-                    WinAPI.MiddleMouseClick(p.X, p.Y);
+                    if (data1.Equals("up"))
+                    {
+                        WinAPI.GetCursorPos(out WinAPI.POINT p);
+                        WinAPI.MiddleMouseClick(p.X, p.Y);
+                    }
                 }
                 else if (data0.Equals("left"))
                 {
@@ -179,54 +191,45 @@ namespace WinFormsApp1
             }
             catch (Exception)
             {
-                Trace.WriteLine($"Bad content: {bodyContent}");
+                Trace.WriteLine($"Unknown mouse content: {bodyContent}");
             }
         }
 
         private static void HandleKeys(string bodyContent)
         {
-            if (bodyContent.Equals("backspace"))
-            {
-                SendKeys.SendWait("{BACKSPACE}");
-            }
-            else
-            {
-                SendKeys.SendWait(bodyContent);
-            }
+            SendKeys.SendWait(bodyContent);
         }
 
         private static void HandleMedia(string bodyContent)
         {
-            if (bodyContent.Equals("up"))
+            switch (bodyContent)
             {
-                WinAPI.SendKey(WinAPI.VK_VOLUME_UP);
-            }
-            else if (bodyContent.Equals("down"))
-            {
-                WinAPI.SendKey(WinAPI.VK_VOLUME_DOWN);
-            }
-            else if (bodyContent.Equals("mute"))
-            {
-                WinAPI.SendKey(WinAPI.VK_VOLUME_MUTE);
-            }
-            else if (bodyContent.Equals("play"))
-            {
-                WinAPI.SendKey(WinAPI.VK_MEDIA_PLAY_PAUSE);
-            }
-            else if (bodyContent.Equals("next"))
-            {
-                WinAPI.SendKey(WinAPI.VK_MEDIA_NEXT_TRACK);
-            }
-            else if (bodyContent.Equals("back"))
-            {
-                WinAPI.SendKey(WinAPI.VK_MEDIA_PREV_TRACK);
-            }
-            else if (bodyContent.Equals("stop"))
-            {
-                WinAPI.SendKey(WinAPI.VK_MEDIA_STOP);
+                case "up": 
+                    WinAPI.SendKey(WinAPI.VK_VOLUME_UP); 
+                    break;
+                case "down":
+                    WinAPI.SendKey(WinAPI.VK_VOLUME_DOWN); 
+                    break;
+                case "mute":
+                    WinAPI.SendKey(WinAPI.VK_VOLUME_MUTE); 
+                    break;
+                case "play":
+                    WinAPI.SendKey(WinAPI.VK_MEDIA_PLAY_PAUSE); 
+                    break;
+                case "next":
+                    WinAPI.SendKey(WinAPI.VK_MEDIA_NEXT_TRACK); 
+                    break;
+                case "back":
+                    WinAPI.SendKey(WinAPI.VK_MEDIA_PREV_TRACK); 
+                    break;
+                case "stop":
+                    WinAPI.SendKey(WinAPI.VK_MEDIA_STOP); 
+                    break;
+                default:
+                    Trace.WriteLine($"Unknown media content: {bodyContent}");
+                    break;
             }
         }
- 
 
     }
 }

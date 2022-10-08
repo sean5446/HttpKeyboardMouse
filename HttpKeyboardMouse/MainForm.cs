@@ -42,11 +42,6 @@ namespace WinFormsApp1
             //Trace.Flush();
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo { FileName = LinkLabelComputerName.Text, UseShellExecute = true });
-        }
-
         private static void Open(object? sender, EventArgs e)
         {
             if (sender != null)
@@ -60,23 +55,28 @@ namespace WinFormsApp1
             Application.Exit();
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+        private void BtnClearLog_Click(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized)
-            {
-                this.Hide();
-            }
+            textBox1.Text = "";
         }
 
-        private void notifyIcon1_Click(object sender, EventArgs e)
+        private void NotifyIcon_Click(object sender, EventArgs e)
         {
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void BtnClearLog_Click(object sender, EventArgs e)
+        private void FormMain_Resize(object sender, EventArgs e)
         {
-            textBox1.Text = "";
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+            }
+        }
+
+        private void LinkLabelComputerName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo { FileName = LinkLabelComputerName.Text, UseShellExecute = true });
         }
     }
 }

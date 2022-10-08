@@ -44,7 +44,7 @@ namespace WinFormsApp1
             this.HttpKeyboardMouse.Icon = ((System.Drawing.Icon)(resources.GetObject("HttpKeyboardMouse.Icon")));
             this.HttpKeyboardMouse.Text = "Http Keyboard Mouse";
             this.HttpKeyboardMouse.Visible = true;
-            this.HttpKeyboardMouse.Click += new System.EventHandler(this.notifyIcon1_Click);
+            this.HttpKeyboardMouse.Click += new System.EventHandler(this.NotifyIcon_Click);
             // 
             // label1
             // 
@@ -64,7 +64,7 @@ namespace WinFormsApp1
             this.LinkLabelComputerName.TabIndex = 1;
             this.LinkLabelComputerName.TabStop = true;
             this.LinkLabelComputerName.Text = "http://localhost:8080";
-            this.LinkLabelComputerName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.LinkLabelComputerName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelComputerName_LinkClicked);
             // 
             // textBox1
             // 
@@ -104,7 +104,7 @@ namespace WinFormsApp1
             this.Name = "MainForm";
             this.Text = "Http Keyboard Mouse";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
+            this.Resize += new System.EventHandler(this.FormMain_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 

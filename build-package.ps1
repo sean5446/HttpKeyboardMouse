@@ -1,24 +1,27 @@
 ﻿
-$destination = "HttpKeyboardMouse\bin\Release\net6.0-windows"
+$binaryPath = "HttpKeyboardMouse\bin\Release\net6.0-windows"
 $packageName = "package.zip"
 $packageFolder = "package"
 
 # don't dot net clean, remove the whole directory in case things have been renamed
-if (Test-Path $destination ) {
-  Remove-Item -Recurse -Force $destination 
+if (Test-Path $binaryPath ) {
+  Remove-Item -Recurse -Force $binaryPath
 }
-if (Test-Path $destination ) {
+if (Test-Path $packageName ) {
     Remove-Item -Force $packageName
+}
+if (Test-Path $packageFolder ) {
+    Remove-Item -Recurse -Force $packageFolder
 }
 
 dotnet build --configuration Release
 
-Copy-Item -Path "config.yaml" -Destination $destination -Force
-Copy-Item -Path "www" -Destination $destination -Recurse -Force
+Copy-Item -Force -Path "config.yaml" -Destination $binaryPath 
+Copy-Item -Recurse -Force -Path "www" -Destination $binaryPath 
 
 # for asset (Publish Release in workflow)
-Compress-Archive -Path $destination/* -DestinationPath $packageName
+Compress-Archive -Path $binaryPath/* -DestinationPath $packageName
 
 # for artifact (Upload Artifact in workflow)
 # New-Item $packageFolder -ItemType directory
-# Copy-Item -Path $destination/* -Destination $packageFolder -Recurse -Force
+# Copy-Item -Path $binaryPath/* -Destination $packageFolder -Recurse -Force
