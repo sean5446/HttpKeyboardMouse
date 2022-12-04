@@ -16,8 +16,7 @@ namespace HttpKeyboardMouse
         {
             void append()
             {
-                _output.AppendText(string.Format("[{0}] ", DateTime.Now.ToString()));
-                _output.AppendText(message);
+                _output.AppendText($"[{DateTime.Now}] {message}");
             }
 
             if (_output.InvokeRequired)

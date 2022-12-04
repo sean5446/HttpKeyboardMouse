@@ -1,6 +1,7 @@
 using HttpKeyboardMouse;
 using System.Diagnostics;
-using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
 using static WinFormsApp1.ConfigReader;
 
 namespace WinFormsApp1
@@ -25,8 +26,8 @@ namespace WinFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Trace.Listeners.Add(new TextWriterTraceListener("http.log"));
-            Trace.Listeners.Add(new TextBoxTraceListener(textBox1));
+            Trace.Listeners.Add(new TextFileTraceListener("http.log"));
+            Trace.Listeners.Add(new TextBoxTraceListener(TextLog));
             Trace.AutoFlush = true;
 
             string defaultConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "config.yaml");
@@ -37,6 +38,15 @@ namespace WinFormsApp1
 
             string? hostname = Environment.GetEnvironmentVariable("COMPUTERNAME");
             LinkLabelComputerName.Text = $"http://{hostname?.ToLower()}.local:{config.Server.Port}/";
+
+            string? hostName = Dns.GetHostName() ?? Environment.GetEnvironmentVariable("COMPUTERNAME");
+            // TODO figure out a way to get 'correct' IPv4
+            string ipAddr = "";
+            foreach (var ip in Dns.GetHostEntry(hostName).AddressList)
+            {
+                if (ip.ToString().Contains('.')) ipAddr = ip.ToString();
+            }
+            LinkLabelIP.Text = $"http://{ipAddr?.ToLower()}:{config.Server.Port}/";
 
             HttpServer httpServer = new();
             httpServer.Start(config.Server?.Port);
@@ -58,7 +68,7 @@ namespace WinFormsApp1
 
         private void BtnClearLog_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "";
+            TextLog.Text = "";
         }
 
         private void NotifyIcon_Click(object sender, EventArgs e)
@@ -73,6 +83,19 @@ namespace WinFormsApp1
             {
                 Hide();
             }
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
         private void LinkLabelComputerName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

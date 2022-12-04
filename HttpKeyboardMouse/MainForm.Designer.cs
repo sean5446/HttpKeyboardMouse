@@ -33,10 +33,11 @@ namespace WinFormsApp1
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.HttpKeyboardMouse = new System.Windows.Forms.NotifyIcon(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.LabelComputerName = new System.Windows.Forms.Label();
             this.LinkLabelComputerName = new System.Windows.Forms.LinkLabel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.TextLog = new System.Windows.Forms.TextBox();
             this.BtnClearLog = new System.Windows.Forms.Button();
+            this.LinkLabelIP = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // HttpKeyboardMouse
@@ -48,12 +49,12 @@ namespace WinFormsApp1
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(97, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Computer name:";
+            this.LabelComputerName.AutoSize = true;
+            this.LabelComputerName.Location = new System.Drawing.Point(12, 9);
+            this.LabelComputerName.Name = "label1";
+            this.LabelComputerName.Size = new System.Drawing.Size(97, 15);
+            this.LabelComputerName.TabIndex = 0;
+            this.LabelComputerName.Text = "Computer name:";
             // 
             // LinkLabelComputerName
             // 
@@ -66,18 +67,18 @@ namespace WinFormsApp1
             this.LinkLabelComputerName.Text = "http://localhost:8080";
             this.LinkLabelComputerName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelComputerName_LinkClicked);
             // 
-            // textBox1
+            // TextLog
             // 
-            this.textBox1.BackColor = System.Drawing.Color.White;
-            this.textBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(15, 41);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(681, 358);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.WordWrap = false;
+            this.TextLog.BackColor = System.Drawing.Color.White;
+            this.TextLog.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TextLog.Location = new System.Drawing.Point(15, 48);
+            this.TextLog.Multiline = true;
+            this.TextLog.Name = "textBox1";
+            this.TextLog.ReadOnly = true;
+            this.TextLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TextLog.Size = new System.Drawing.Size(681, 351);
+            this.TextLog.TabIndex = 2;
+            this.TextLog.WordWrap = false;
             // 
             // BtnClearLog
             // 
@@ -89,15 +90,26 @@ namespace WinFormsApp1
             this.BtnClearLog.UseVisualStyleBackColor = true;
             this.BtnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
             // 
+            // LinkLabelIP
+            // 
+            this.LinkLabelIP.AutoSize = true;
+            this.LinkLabelIP.Location = new System.Drawing.Point(115, 30);
+            this.LinkLabelIP.Name = "LinkLabelIP";
+            this.LinkLabelIP.Size = new System.Drawing.Size(119, 15);
+            this.LinkLabelIP.TabIndex = 5;
+            this.LinkLabelIP.TabStop = true;
+            this.LinkLabelIP.Text = "http://127.0.0.1:8080/";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 411);
+            this.Controls.Add(this.LinkLabelIP);
             this.Controls.Add(this.BtnClearLog);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.TextLog);
             this.Controls.Add(this.LinkLabelComputerName);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LabelComputerName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -113,9 +125,10 @@ namespace WinFormsApp1
         #endregion
 
         private System.Windows.Forms.NotifyIcon HttpKeyboardMouse;
-        private Label label1;
+        private Label LabelComputerName;
         private LinkLabel LinkLabelComputerName;
-        private TextBox textBox1;
+        private TextBox TextLog;
         private Button BtnClearLog;
+        private LinkLabel LinkLabelIP;
     }
 }
