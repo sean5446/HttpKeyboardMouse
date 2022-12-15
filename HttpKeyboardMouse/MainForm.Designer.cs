@@ -1,6 +1,5 @@
-﻿using System.Drawing;
-
-namespace WinFormsApp1
+﻿
+namespace HttpKeyboardMouse
 {
     partial class MainForm
     {

@@ -4,7 +4,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Core;
 using System.Diagnostics;
 
-namespace WinFormsApp1
+namespace HttpKeyboardMouse
 {
     internal class ConfigReader
     {

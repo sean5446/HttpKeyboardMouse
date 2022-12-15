@@ -1,8 +1,7 @@
-﻿
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Application = System.Windows.Forms.Application;
 
-namespace WinFormsApp1
+namespace HttpKeyboardMouse
 {
     internal class WinAPI
     {

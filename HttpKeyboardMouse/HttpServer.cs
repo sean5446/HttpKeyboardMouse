@@ -1,9 +1,8 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Text;
 
-namespace WinFormsApp1
+namespace HttpKeyboardMouse
 {
     internal class HttpServer
     {
@@ -22,7 +21,8 @@ namespace WinFormsApp1
             {
                 _pageContent = File.ReadAllBytes("../../../../www/km.htm");
                 _favIcon = File.ReadAllBytes("../../../../www/favicon.ico");
-            } else
+            }
+            else
             {
                 _pageContent = File.ReadAllBytes(Path.Combine(currentDir, "www", "km.htm"));
                 _favIcon = File.ReadAllBytes(Path.Combine(currentDir, "www", "favicon.ico"));
@@ -145,32 +145,34 @@ namespace WinFormsApp1
         {
             try
             {
-                string data0 = bodyContent.Split(' ')[0];
-                string data1 = bodyContent.Split(' ')[1];
+                // TODO: there's some bug here when left clicking on 2nd screen
 
-                if (data0.Equals("right"))
+                string mouseButton = bodyContent.Split(' ')[0];
+                string mouseDirection = bodyContent.Split(' ')[1];
+
+                if (mouseButton.Equals("right"))
                 {
-                    if (data1.Equals("up"))
+                    if (mouseDirection.Equals("up"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
                         WinAPI.MouseRightClick(p.X, p.Y);
                     }
                 }
-                else if (data0.Equals("middle"))
+                else if (mouseButton.Equals("middle"))
                 {
-                    if (data1.Equals("up"))
+                    if (mouseDirection.Equals("up"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
                         WinAPI.MouseMiddleClick(p.X, p.Y);
                     }
                 }
-                else if (data0.Equals("left"))
+                else if (mouseButton.Equals("left"))
                 {
-                    if (data1.Equals("up")) {
+                    if (mouseDirection.Equals("up")) {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
                         WinAPI.MouseLeftUp(p.X, p.Y);
                     }
-                    else if (data1.Equals("down"))
+                    else if (mouseDirection.Equals("down"))
                     {
                         WinAPI.GetCursorPos(out WinAPI.POINT p);
                         WinAPI.MouseLeftDown(p.X, p.Y);
@@ -183,8 +185,8 @@ namespace WinFormsApp1
                 }
                 else
                 {
-                    int x = (int)Convert.ToDouble(data0);
-                    int y = (int)Convert.ToDouble(data1);
+                    int x = (int)Convert.ToDouble(mouseButton);
+                    int y = (int)Convert.ToDouble(mouseDirection);
                     WinAPI.GetCursorPos(out WinAPI.POINT p);
                     WinAPI.SetCursorPos(p.X + x, p.Y + y);
                 }

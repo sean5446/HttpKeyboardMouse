@@ -1,10 +1,8 @@
-using HttpKeyboardMouse;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using static WinFormsApp1.ConfigReader;
 
-namespace WinFormsApp1
+namespace HttpKeyboardMouse
 {
     public partial class MainForm : Form
     {
@@ -31,7 +29,7 @@ namespace WinFormsApp1
             Trace.AutoFlush = true;
 
             string defaultConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "config.yaml");
-            Config config = LoadFile(defaultConfigPath);
+            ConfigReader.Config config = ConfigReader.LoadFile(defaultConfigPath);
 
             // Trace statements make it to release build, whereas debug to not
             Trace.WriteLine("Starting on port: " + config.Server.Port);
