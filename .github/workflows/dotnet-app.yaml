@@ -9,7 +9,8 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    # windows 11 ships with dot net 4.8 use windows-2019 to build 4.8
+    runs-on: windows-2019
     strategy:
       matrix:
         dotnet-version: [ '4.8.x' ]
