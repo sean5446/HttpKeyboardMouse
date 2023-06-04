@@ -131,9 +131,9 @@ namespace HttpKeyboardMouse
                     HandleMedia(bodyContent);
                     Trace.WriteLine($"{request.RemoteEndPoint} used media operation: {bodyContent}");
                     break;
-                case "/screens":
-                    HandleScreens(bodyContent);
-                    Trace.WriteLine($"{request.RemoteEndPoint} moved to screen: {bodyContent}");
+                case "/special":
+                    HandleSpecial(bodyContent);
+                    Trace.WriteLine($"{request.RemoteEndPoint} special key: {bodyContent}");
                     break;
                 default:
                     Trace.WriteLine($"Unknown endpoint: {bodyContent}");
@@ -233,10 +233,40 @@ namespace HttpKeyboardMouse
             }
         }
 
-        private static void HandleScreens(string bodyContent)
+        private static void HandleSpecial(string bodyContent)
         {
-            int n = (int)Convert.ToDouble(bodyContent) - 1;
-            WinAPI.SetCursorInMiddleOfScreen(n);
+            try
+            {
+                int n = (int)Convert.ToDouble(bodyContent) - 1;
+                WinAPI.SetCursorInMiddleOfScreen(n);
+            }
+            catch
+            {
+                switch (bodyContent)
+                {
+                    case "up":
+                        SendKeys.SendWait("{UP}");
+                        break;
+                    case "down":
+                        SendKeys.SendWait("{DOWN}");
+                        break;
+                    case "backward":
+                        SendKeys.SendWait("{LEFT}");
+                        break;
+                    case "forward":
+                        SendKeys.SendWait("{RIGHT}");
+                        break;
+                    case "esc":
+                        SendKeys.SendWait("{ESC}");
+                        break;
+                    case "f":
+                        SendKeys.SendWait("f");
+                        break;
+                    default:
+                        Trace.WriteLine($"Unknown special content: {bodyContent}");
+                        break;
+                }
+            }
         }
 
     }
